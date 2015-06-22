@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Tetrix Game Center</title>
+	<style type="text/css">
+	#board{position:relative;width:400px;height:600px;border:1px solid #ccc;margin:0 auto;background:#000;}
+	.block {position:absolute;box-sizing: border-box;width:20px;height:20px;background: #09f;border:1px solid #ccc;};
+	.ca {background: #09f;}
+	.cb {background: #baff00;}
+	</style>
+</head>
+<body>
+	<div id="board">
+		
+	</div>
+</body>
+<script type="text/javascript" src="Tetrix.js"></script>
+<script type="text/javascript">
+	window.onload = function (){
+		var g = new GameCenter({
+			w : 400,
+			h : 600,
+			id : 'board'
+		});
+		var t= new Tetrix({
+			x : 2,
+			y : 3, 
+			board : 'board'
+		});
+		g.addPlayer(t);
+		g.start();
+	}
+
+</script>
+</html>
