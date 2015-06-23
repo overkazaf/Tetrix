@@ -150,6 +150,8 @@
 		},
 		bindEvents : function(){
 			var _ = this;
+
+			// will be refactor by addEvent function
 			document.onkeydown = function(e){
 				var e = e || window.event;
 				switch(e.keyCode) {
