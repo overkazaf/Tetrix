@@ -88,9 +88,9 @@
 		start : function (){
 			log('starting');
 			var _ = this;
-			log(_.players);
+			//log(_.players);
 			forEach(_.players, function(i, player){
-				log(player);
+				//log(player);
 				player.init();
 			});
 			_.bindEvents();
@@ -111,12 +111,13 @@
 		}
 	};
 
-	function randShapes (els){
+	function randShapes (el, els){
 		var shapes = getSupportedShapes();
 		var shape = shapes[0];
 		var shapeArray = shape.split(',');
+		el.shape = shapeArray;
 		forEach(els, function (i, el){
-			log(2*i, 2*i+1);
+			//log(2*i, 2*i+1);
 			el.row = +shapeArray[2*i];
 			el.col = +shapeArray[2*i+1];
 		});
@@ -136,7 +137,7 @@
 		init : function (){
 			var _ = this;
 			_.divs = [create('div', 'block ca'), create('div', 'block ca'), create('div', 'block ca'), create('div', 'block ca')];
-			_.divs = randShapes(_.divs);
+			_.divs = randShapes(_, _.divs);
 			forEach(_.divs, function (i, div){
 				(_.board).appendChild(div);
 				var l = (_.offset.l + _.x + div.col) * _.w;
@@ -145,22 +146,52 @@
 				css(div, 'top', t);
 			});
 
-			_.moveD();
-			alert('1');
-			_.moveD();
+			_.bindEvents();
+		},
+		bindEvents : function(){
+			var _ = this;
+			document.onkeydown = function(e){
+				var e = e || window.event;
+				switch(e.keyCode) {
+					case 37:
+						_.moveH(-1);
+						break;
+					case 38:
+						_.rotate();
+						break;
+					case 39:
+						_.moveH(1);
+						break;
+					case 40:
+						_.moveD();
+						break;
+				}
+			};
 		},
 		rotate : function (){
-
+			// 旋转算法
+			var _ = this;
+			var shapeArray = _.shape;
+			var els = _.divs;
+			for (var i=0;i<4;i++) {
+				var t = shapeArray[2*i];
+				shapeArray[2*i] = shapeArray[2*i+1];
+				shapeArray[2*i+1] = 3 - t;
+			}
+			forEach(els, function (i, el){
+				el.row = +shapeArray[2*i];
+				el.col = +shapeArray[2*i+1];
+			});
+			_.refresh();
 		},
-		moveH : function(){
-
+		moveH : function(step){
+			var _ = this;
+			_.offset.l += step;
+			_.refresh();
 		},
 		moveD : function (){
 			var _ = this;
-			forEach(_.divs, function(i, div){
-				_.offset.t += 1;
-			});
-
+			_.offset.t += 1;
 			_.refresh();
 		},
 		refresh : function (){
@@ -168,6 +199,7 @@
 			forEach(_.divs, function(i, div){
 				var l = (_.offset.l + _.x + div.col) * _.w;
 				var t = (_.offset.t + _.y + div.row) * _.h;
+				
 				css(div, 'left', l);
 				css(div, 'top', t);
 			});
